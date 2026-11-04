@@ -1,0 +1,20 @@
+# Pipeline inputs and outputs never go into Git
+data/
+models/
+reports/
+logs/
+
+# Secrets
+.env
+
+# Python and tooling
+__pycache__/
+*.pyc
+.pytest_cache/
+.coverage
+coverage.xml
+htmlcov/
+.ipynb_checkpoints/
+.vscode/
+.idea/
+.DS_Store
