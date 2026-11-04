@@ -1,0 +1,65 @@
+# Every setting the pipeline uses. main.py loads this file and passes values to each module.
+# Metric name, threshold, direction and target must match README.md and TEAM_BRIEF.md.
+
+paths:
+  raw_data: data/raw/online_shoppers_intention.csv
+  clean_data: data/processed/clean.csv
+  model: models/model.joblib
+  predictions: reports/predictions.csv
+  metrics: reports/metrics.json
+  log_file: logs/pipeline.log
+
+logging:
+  level: INFO
+
+data:
+  target_column: Revenue
+  numeric_columns:
+    - Administrative
+    - Administrative_Duration
+    - Informational
+    - Informational_Duration
+    - ProductRelated
+    - ProductRelated_Duration
+    - BounceRates
+    - ExitRates
+    - PageValues
+    - SpecialDay
+  categorical_columns:
+    - Month
+    - OperatingSystems
+    - Browser
+    - Region
+    - TrafficType
+    - VisitorType
+    - Weekend
+  # validate.py rejects any value outside these lists (it never fixes data)
+  allowed_values:
+    Month: [Jan, Feb, Mar, Apr, May, June, Jun, Jul, Aug, Sep, Oct, Nov, Dec]
+    VisitorType: [Returning_Visitor, New_Visitor, Other]
+  # clean_data.py rewrites these spellings to one standard form
+  value_aliases:
+    Month:
+      June: Jun
+
+split:
+  test_size: 0.2
+  random_state: 42
+
+model:
+  n_estimators: 300
+  min_samples_leaf: 2
+  class_weight: balanced
+  random_state: 42
+  n_jobs: -1
+
+evaluation:
+  metric: pr_auc
+  threshold: 0.65
+  direction: higher_is_better
+
+inference:
+  index_name: session_index
+  decision_threshold: 0.5
+  probability_column: purchase_probability
+  label_column: predicted_purchase
